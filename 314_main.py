@@ -1,38 +1,38 @@
 import requests
 import random
 
-# change later to accept command line args
-# arg1 = "1*1"
-# arg2 = "-5*66"
-# arg3 = "121*3"
-# arg4 = "430*-2"
-# arg5 = "-1*-99"
+# waiting for user to choose amount to test, if error occurs 5 test will run
+try:
+    testAmount = int(input())
+except (IOError, TypeError, ValueError) as e:
+    testAmount = 5
 
-# creating a string containing the multiplication of 2 ints between 0 and 201
-ran1 = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
-ran2 = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
-ran3 = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
-ran4 = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
-ran5 = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
+ranStrList = []
+pyCalcAns = []
+
+# creating a list of strings containing the multiplication of 2 ints between 0 and 201
+i = 0
+while i < testAmount:
+  ranIntString = str(random.randint(1, 200)) + "*" + str(random.randint(1, 200))
+  ranStrList.append(ranIntString)
+  i += 1
 
 # counter for test cases
 counter = 1
 
-# function to evalute either the generated string or the given arguments
+# function to evalute either the equation string
 def evaluateEquation(string):
     ans = eval(string)
     return ans
 
-
-pyAnswer1 = evaluateEquation(ran1)
-pyAnswer2 = evaluateEquation(ran2)
-pyAnswer3 = evaluateEquation(ran3)
-pyAnswer4 = evaluateEquation(ran4)
-pyAnswer5 = evaluateEquation(ran5)
+# looping through the equation string, returning pythons calculator answer and adding to list
+for item in ranStrList:
+    ans1 = evaluateEquation(item)
+    pyCalcAns.append(ans1)
 
 
-#function that will compare the python evaluated answer and the answer given from the api request
-def curlFunction(arg, pyAnswer):
+# using pythons request library to call the mathjs api to evaluate and compare
+def requestsFunction(arg, pyAnswer):
     global counter
     req = requests.get('http://api.mathjs.org/v4/?expr='+arg)
     reqInt = int(req.text)
@@ -44,10 +44,9 @@ def curlFunction(arg, pyAnswer):
         counter += 1
 
 
-curlFunction(ran1, pyAnswer1)
-curlFunction(ran2, pyAnswer2)
-curlFunction(ran3, pyAnswer3)
-curlFunction(ran4, pyAnswer4)
-curlFunction(ran5, pyAnswer5)
+counter1 = 0
+while counter1 < testAmount:
+   requestsFunction(ranStrList[counter1], pyCalcAns[counter1])
+   counter1 += 1
 
 
