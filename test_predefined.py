@@ -317,10 +317,12 @@ class TestPredefined(unittest.TestCase):
             self.assertTrue(result in test_case.calc_divide())
 
 
-if __name__ == "__main__":
+def test_predefined():
     """ By using maximum test case range, the test will run for days,  
         thus test case range from test case 0 to test case 10 """
     TestPredefined.range_max = 0
     TestPredefined.range_max = 5
 
     unittest.main()
+    
+    return True # TODO
